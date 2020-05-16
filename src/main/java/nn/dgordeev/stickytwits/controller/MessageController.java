@@ -1,7 +1,9 @@
 package nn.dgordeev.stickytwits.controller;
 
 import nn.dgordeev.stickytwits.domain.Message;
+import nn.dgordeev.stickytwits.domain.User;
 import nn.dgordeev.stickytwits.repository.MessageRepository;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +32,13 @@ public class MessageController {
     }
 
     @PostMapping("/main")
-    public String createMessage(@RequestParam String text,
-                                @RequestParam String tag,
-                                Map<String, Object> model) {
-        Message message = new Message(text, tag);
+    public String createMessage(
+            @AuthenticationPrincipal User user,
+            @RequestParam String text,
+            @RequestParam String tag,
+            Map<String, Object> model)
+    {
+        Message message = new Message(text, tag, user);
         message.setCreatedAt(LocalDateTime.now());
         messageRepository.save(message);
 
