@@ -8,7 +8,13 @@
     <title>Sticky Twits</title>
 </head>
 <body>
-<div>Hello, {{ name }}!</div>
-<a href="/"><< Back to home page</a>
+<div>
+    <h2 style="color: red">Error occurred</h2>
+    {{#error}}
+        <p>{{message}}</p>
+        <p>{{path}}</p>
+        <p>{{timestamp}}</p>
+    {{/error}}
+</div>
 </body>
 </html>
