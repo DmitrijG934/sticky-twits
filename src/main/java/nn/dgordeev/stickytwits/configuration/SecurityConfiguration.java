@@ -1,21 +1,26 @@
 package nn.dgordeev.stickytwits.configuration;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    private final DataSource dataSource;
+
+    public SecurityConfiguration(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/").permitAll()
+                    .antMatchers("/", "/registration").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
@@ -26,13 +31,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("u")
-                .password("p")
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        String authorizeQuery = "select u.username, ur.roles from granted_user " +
+                "u inner join user_role ur on u.id = ur.user_id where username=?";
+        auth
+                .jdbcAuthentication()
+                .passwordEncoder(NoOpPasswordEncoder.getInstance())
+                .dataSource(dataSource)
+                .usersByUsernameQuery("select username, password, is_active from granted_user where username=?")
+                .authoritiesByUsernameQuery(authorizeQuery);
     }
 }
