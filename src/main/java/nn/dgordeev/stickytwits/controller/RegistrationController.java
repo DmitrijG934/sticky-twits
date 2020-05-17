@@ -3,6 +3,7 @@ package nn.dgordeev.stickytwits.controller;
 import nn.dgordeev.stickytwits.domain.Role;
 import nn.dgordeev.stickytwits.domain.User;
 import nn.dgordeev.stickytwits.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,12 @@ import java.util.Map;
 @RequestMapping("/registration")
 public class RegistrationController {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public RegistrationController(UserRepository userRepository) {
+    public RegistrationController(UserRepository userRepository,
+                                  PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -34,6 +38,8 @@ public class RegistrationController {
             return "registration";
         }
 
+        String password = user.getPassword();
+        user.setPassword(passwordEncoder.encode(password));
         user.setCreatedAt(LocalDateTime.now());
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));

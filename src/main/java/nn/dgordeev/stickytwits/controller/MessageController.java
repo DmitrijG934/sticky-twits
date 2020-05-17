@@ -22,12 +22,21 @@ public class MessageController {
     }
 
     @GetMapping("/main")
-    public String getMessages(Map<String, Object> model) {
-        List<Message> messages = messageRepository.findAll();
-        if(messages.isEmpty()) {
-            model.put("notification", "There are no messages yet.");
+    public String getMessages(
+            @RequestParam(required = false, defaultValue = "") String search,
+            Map<String, Object> model) {
+        List<Message> messages;
+        if (search != null && !search.isEmpty()) {
+            messages = messageRepository.findAllByTag(search);
+            if (messages.isEmpty()) model.put("reportMessage", "Result is empty.");
+        } else {
+            messages = messageRepository.findAll();
+            if (messages.isEmpty()) model.put("reportMessage", "There are no messages yet!");
         }
+
         model.put("messages", messages);
+        model.put("search", search);
+
         return "main";
     }
 
@@ -36,8 +45,7 @@ public class MessageController {
             @AuthenticationPrincipal User user,
             @RequestParam String text,
             @RequestParam String tag,
-            Map<String, Object> model)
-    {
+            Map<String, Object> model) {
         Message message = new Message(text, tag, user);
         message.setCreatedAt(LocalDateTime.now());
         messageRepository.save(message);

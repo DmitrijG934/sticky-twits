@@ -1,3 +1,4 @@
+<#macro page>
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,13 +9,7 @@
     <title>Sticky Twits</title>
 </head>
 <body>
-<div>
-    <h2 style="color: red">Error occurred</h2>
-    {{#error}}
-        <p>{{message}}</p>
-        <p>{{path}}</p>
-        <p>{{timestamp}}</p>
-    {{/error}}
-</div>
+<#nested>
 </body>
 </html>
+</#macro>
