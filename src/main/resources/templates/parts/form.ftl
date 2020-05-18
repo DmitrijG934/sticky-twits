@@ -15,12 +15,13 @@
 
 <#macro createMessage path>
     <div>
-        <form method="post" action="${path}">
+        <form method="post" action="${path}" enctype="multipart/form-data">
             <div>
                 <label for="text">Enter your message: </label><br>
                 <input type="text" id="text" name="text"/><br>
                 <label for="tag">Enter tag for message: </label><br>
                 <input type="text" id="tag" name="tag"/><br>
+                <input type="file" name="file"/><br>
                 <input type="hidden" name="_csrf" value="${_csrf.token}">
             </div>
             <br>
