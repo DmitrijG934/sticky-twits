@@ -3,3 +3,8 @@ body {
     font-size: 24px;
     background: #faf8f8;
 }
+
+img {
+    width: 225px;
+    height: 225px;
+}

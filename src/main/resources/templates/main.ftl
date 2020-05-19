@@ -23,9 +23,15 @@
             <p>${ message.tag }</p>
             <p>${ message.createdAt }</p>
             <p>${ message.authorName }</p>
-            <#if message.filename??>
+            <#if message.file??>
                 <div>
-                    <img src="img/${message.filename}">
+                    <#if !message.file.fileType?contains("image")>
+                        <img src="https://img.icons8.com/carbon-copy/2x/file.png" alt="">
+                    <#else >
+                        <img src="file/${message.file.fileName}" alt=""><br>
+                    </#if>
+                    <hr>
+                    <a href="file/${message.file.fileName}">Download</a>
                 </div>
             </#if>
         </div>

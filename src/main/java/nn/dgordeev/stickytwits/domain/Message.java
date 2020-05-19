@@ -3,10 +3,7 @@ package nn.dgordeev.stickytwits.domain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Message extends BaseEntity {
@@ -16,7 +13,9 @@ public class Message extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
-    private String filename;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.EAGER)
+    private LobFile file;
 
     public Message(String text, String tag, User user) {
         this.text = text;
@@ -55,11 +54,11 @@ public class Message extends BaseEntity {
         this.tag = tag;
     }
 
-    public String getFilename() {
-        return filename;
+    public LobFile getFile() {
+        return file;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFile(LobFile filename) {
+        this.file = filename;
     }
 }

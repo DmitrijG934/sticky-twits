@@ -1,17 +1,18 @@
 package nn.dgordeev.stickytwits.controller;
 
+import nn.dgordeev.stickytwits.domain.LobFile;
 import nn.dgordeev.stickytwits.domain.Message;
 import nn.dgordeev.stickytwits.domain.User;
+import nn.dgordeev.stickytwits.repository.LobFileRepository;
 import nn.dgordeev.stickytwits.repository.MessageRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,11 +22,12 @@ import java.util.UUID;
 @Controller
 public class MessageController {
     private final MessageRepository messageRepository;
-    @Value("${upload.file.path}")
-    private String uploadPath;
+    private final LobFileRepository lobFileRepository;
 
-    public MessageController(MessageRepository messageRepository) {
+    public MessageController(MessageRepository messageRepository,
+                             LobFileRepository lobFileRepository) {
         this.messageRepository = messageRepository;
+        this.lobFileRepository = lobFileRepository;
     }
 
     @GetMapping("/main")
@@ -58,17 +60,15 @@ public class MessageController {
         message.setCreatedAt(LocalDateTime.now());
 
         if (file != null && !file.getOriginalFilename().isEmpty()) {
-            File uploadDir = new File(uploadPath);
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
+            String normalizedFilename = StringUtils.cleanPath(file.getOriginalFilename());
             String fileIdentifier = UUID.randomUUID().toString();
-            String resultFilename = fileIdentifier + "-" + file.getOriginalFilename();
+            String resultFilename = fileIdentifier + "-" + normalizedFilename;
 
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-            message.setFilename(resultFilename);
+            LobFile lobFile = new LobFile(resultFilename, file.getContentType(), file.getBytes());
+            lobFile.setCreatedAt(LocalDateTime.now());
+            lobFileRepository.save(lobFile);
+
+            message.setFile(lobFile);
         }
         messageRepository.save(message);
 
