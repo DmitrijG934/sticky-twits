@@ -1,40 +1,50 @@
 <#macro form path buttonName>
-    <div>
-        <form action="${path}" method="post">
-            <label>Username:
-                <input type="text" name="username"/>
-            </label>
-            <label>Password:
-                <input type="password" name="password"/>
-            </label>
-            <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <button type="submit">${buttonName}</button>
-        </form>
-    </div>
+    <form action="${path}" method="post">
+        <div class="form-group row">
+            <label for="username" class="col-sm-1 col-form-label">Username</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="password" class="col-sm-1 col-form-label">Password</label>
+            <div class="col-sm-5">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password"/>
+            </div>
+        </div>
+        <input type="hidden" name="_csrf" value="${_csrf.token}">
+        <button type="submit" class="btn btn-primary">${buttonName}</button>
+    </form>
 </#macro>
 
 <#macro createMessage path>
-    <div>
-        <form method="post" action="${path}" enctype="multipart/form-data">
-            <div>
-                <label for="text">Enter your message: </label><br>
-                <input type="text" id="text" name="text"/><br>
-                <label for="tag">Enter tag for message: </label><br>
-                <input type="text" id="tag" name="tag"/><br>
-                <input type="file" name="file"/><br>
-                <input type="hidden" name="_csrf" value="${_csrf.token}">
+    <form method="post" action="${path}" enctype="multipart/form-data">
+        <div>
+            <div class="form-group mt-3">
+                <input type="text" id="text" name="text" class="form-control" placeholder="Message"/>
             </div>
-            <br>
-            <button type="submit">Create message!</button>
-        </form>
-    </div>
+            <div class="form-group">
+                <input type="text" id="tag" name="tag" class="form-control" placeholder="Tag"/>
+            </div>
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" id="addFile" name="file" class="form-control" placeholder="Choose file"/>
+                    <label for="addFile" class="custom-file-label">Pin file</label>
+                </div>
+            </div>
+            <input type="hidden" name="_csrf" value="${_csrf.token}">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
 </#macro>
 
 <#macro logout path>
     <div>
         <form action="${path}" method="post">
             <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <button type="submit">Logout</button>
+            <button type="submit" class="btn btn-primary">Logout</button>
         </form>
     </div>
 </#macro>

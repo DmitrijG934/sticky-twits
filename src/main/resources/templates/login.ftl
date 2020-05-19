@@ -3,5 +3,5 @@
 <@c.page>
     <h3>Login</h3>
     <@f.form path="/login" buttonName="Login"/>
-    <a href="/registration">>> Sign up</a>
+    <a href="/registration" class="btn btn-primary mt-2">Sign up</a>
 </@c.page>

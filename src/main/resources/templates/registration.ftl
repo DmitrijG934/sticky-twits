@@ -2,10 +2,12 @@
 <#import "parts/form.ftl" as f>
 <@c.page>
     <#if message??>
-        <p style="color: red">${message}</p>
+        <p>${message}</p>
         <hr>
     </#if>
     <h3>Registration</h3>
-    <@f.form path="/registration" buttonName="Sign up"/>
-    <a href="/login">>> Sign in</a>
+    <div>
+        <@f.form path="/registration" buttonName="Sign up"/>
+        <a href="/login" class="btn btn-primary mt-2">Sign in</a>
+    </div>
 </@c.page>

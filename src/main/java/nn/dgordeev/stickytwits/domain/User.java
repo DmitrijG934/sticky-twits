@@ -30,6 +30,10 @@ public class User extends BaseEntity implements UserDetails {
         this.roles = roles;
     }
 
+    public boolean isAdmin() {
+        return this.roles.contains(Role.ADMIN);
+    }
+
     public String getUsername() {
         return username;
     }
