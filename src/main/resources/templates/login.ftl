@@ -2,6 +2,21 @@
 <#import "parts/form.ftl" as f>
 <@c.page>
     <h3>Login</h3>
-    <@f.form path="/login" buttonName="Login"/>
+    <#if message??>
+        <div class="alert alert-success" role="alert">
+            ${message}
+        </div>
+    </#if>
+    <#if messageSuccess??>
+        <div class="alert alert-success" role="alert">
+            ${messageSuccess}
+        </div>
+    </#if>
+    <#if messageFail??>
+        <div class="alert alert-warning" role="alert">
+            ${messageFail}
+        </div>
+    </#if>
+    <@f.form path="/login" buttonName="Login" isRegister="false"/>
     <a href="/registration" class="btn btn-primary mt-2">Sign up</a>
 </@c.page>

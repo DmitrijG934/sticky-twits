@@ -3,7 +3,14 @@ package nn.dgordeev.stickytwits.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Set;
 
@@ -13,6 +20,8 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
     private String password;
     private boolean isActive;
+    private String email;
+    private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -77,6 +86,22 @@ public class User extends BaseEntity implements UserDetails {
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 
     public void setActive(boolean active) {

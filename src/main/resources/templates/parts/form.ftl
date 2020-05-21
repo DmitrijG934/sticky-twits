@@ -1,4 +1,4 @@
-<#macro form path buttonName>
+<#macro form path buttonName isRegister>
     <form action="${path}" method="post">
         <div class="form-group row">
             <label for="username" class="col-sm-1 col-form-label">Username</label>
@@ -12,6 +12,14 @@
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password"/>
             </div>
         </div>
+        <#if isRegister == "true">
+            <div class="form-group row">
+                <label for="email" class="col-sm-1 col-form-label">Email</label>
+                <div class="col-sm-5">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="don.joe@mail.com"/>
+                </div>
+            </div>
+        </#if>
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <button type="submit" class="btn btn-primary">${buttonName}</button>
     </form>

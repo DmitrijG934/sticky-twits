@@ -1,28 +1,22 @@
 package nn.dgordeev.stickytwits.controller;
 
-import nn.dgordeev.stickytwits.domain.Role;
 import nn.dgordeev.stickytwits.domain.User;
-import nn.dgordeev.stickytwits.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import nn.dgordeev.stickytwits.service.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Map;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    public RegistrationController(UserRepository userRepository,
-                                  PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
@@ -31,19 +25,23 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String registerUser(User user, Map<String, Object> model) {
-        User userByUsername = userRepository.findUserByUsername(user.getUsername());
-        if (userByUsername != null) {
-            model.put("message", "User is already exists!");
+    public String registerUser(User user, Model model, RedirectAttributes redirectAttributes) {
+        if (!userService.addUser(user)) {
+            model.addAttribute("message", "User is already exists!");
             return "registration";
         }
-
-        String password = user.getPassword();
-        user.setPassword(passwordEncoder.encode(password));
-        user.setCreatedAt(LocalDateTime.now());
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepository.save(user);
+        redirectAttributes
+                .addFlashAttribute("message",
+                        String.format("Activation code sent to your email: %s", user.getEmail()));
         return "redirect:/login";
+    }
+
+    @GetMapping("activation/{code}")
+    public String activateUser(@PathVariable String code, Model model) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("messageSuccess", "User successfully activated!");
+        } else model.addAttribute("messageFail", "Activation code not found!");
+        return "login";
     }
 }
