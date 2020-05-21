@@ -41,7 +41,7 @@ public class MailConfiguration {
         javaMailProperties.put("mail.transport.protocol", protocol);
         javaMailProperties.setProperty("mail.smtp.auth", auth);
         javaMailProperties.setProperty("mail.smtp.starttls.enable", enable);
-
+        javaMailProperties.put("mail.smtp.ssl.trust", host);
 
         return javaMailSender;
     }
