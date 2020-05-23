@@ -4,6 +4,7 @@ import nn.dgordeev.stickytwits.domain.User;
 import nn.dgordeev.stickytwits.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +31,11 @@ public class RegistrationController {
             model.addAttribute("message", "User is already exists!");
             return "registration";
         }
-        redirectAttributes
-                .addFlashAttribute("message",
-                        String.format("Activation code sent to your email: %s", user.getEmail()));
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            redirectAttributes
+                    .addFlashAttribute("message",
+                            String.format("Activation code sent to your email: %s", user.getEmail()));
+        }
         return "redirect:/login";
     }
 
