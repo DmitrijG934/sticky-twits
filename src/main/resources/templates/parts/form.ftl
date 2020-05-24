@@ -3,20 +3,50 @@
         <div class="form-group row">
             <label for="username" class="col-sm-1 col-form-label">Username</label>
             <div class="col-sm-5">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username"/>
+                <input type="text" class="form-control ${(usernameError??)?string("is-invalid", "")}" id="username"
+                       name="username" value="<#if user??>${user.username}</#if>" placeholder="Username"/>
+                <#if usernameError??>
+                    <div class="invalid-feedback">
+                        ${usernameError}
+                    </div>
+                </#if>
             </div>
         </div>
         <div class="form-group row">
             <label for="password" class="col-sm-1 col-form-label">Password</label>
             <div class="col-sm-5">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password"/>
+                <input type="password" class="form-control ${(passwordError??)?string("is-invalid", "")}" id="password"
+                       name="password" placeholder="Password"/>
+                <#if passwordError??>
+                    <div class="invalid-feedback">
+                        ${passwordError}
+                    </div>
+                </#if>
             </div>
         </div>
         <#if isRegister == "true">
             <div class="form-group row">
+                <label for="passwordConfirm" class="col-sm-1 col-form-label">Confirm password</label>
+                <div class="col-sm-5">
+                    <input type="password" class="form-control ${(passwordConfirmError??)?string("is-invalid", "")}"
+                           id="passwordConfirm" name="passwordConfirm" placeholder="Confirm password"/>
+                    <#if passwordConfirmError??>
+                        <div class="invalid-feedback">
+                            ${passwordConfirmError}
+                        </div>
+                    </#if>
+                </div>
+            </div>
+            <div class="form-group row">
                 <label for="email" class="col-sm-1 col-form-label">Email</label>
                 <div class="col-sm-5">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="don.joe@mail.com"/>
+                    <input type="email" class="form-control ${(emailError??)?string("is-invalid", "")}" id="email"
+                           name="email" value="<#if user??>${user.email}</#if>" placeholder="don.joe@mail.com"/>
+                    <#if emailError??>
+                        <div class="invalid-feedback">
+                            ${emailError}
+                        </div>
+                    </#if>
                 </div>
             </div>
         </#if>
