@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -31,11 +32,18 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String registerUser(@Valid User user,
-                               BindingResult bindingResult,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
-        if (user.getPassword() != null && !user.getPassword().equals(user.getPasswordConfirm())) {
+    public String registerUser(
+            @RequestParam("passwordConfirm") String passwordConfirm,
+            @Valid User user,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        if (StringUtils.isEmpty(passwordConfirm)) {
+            model.addAttribute("passwordConfirmError", "Password confirmation cannot to be empty");
+        }
+
+        if (user.getPassword() != null && !user.getPassword().equals(passwordConfirm)) {
             model.addAttribute("passwordError", "Passwords are not equals!");
             return "registration";
         }

@@ -11,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
@@ -24,8 +23,6 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
     @NotBlank(message = "Password cannot to be empty")
     private String password;
-    @Transient
-    private String passwordConfirm;
     private boolean isActive;
     @Email(message = "Email is incorrect")
     @NotBlank(message = "Email cannot to be empty")
@@ -125,11 +122,4 @@ public class User extends BaseEntity implements UserDetails {
         this.roles = roles;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
 }
